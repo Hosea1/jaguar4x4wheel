@@ -11,7 +11,7 @@ file(GLOB_RECURSE launch_files "${CMAKE_SOURCE_DIR}/launch/*")
 file(GLOB_RECURSE worlds_files "${CMAKE_SOURCE_DIR}/worlds/*")
 list(APPEND extra_files ${include_files} ${launch_files} ${worlds_files})
 
-add_custom_target(jaguar4x4wheel_description SOURCES ${extra_files})
+add_custom_target(jaguar4x4wheel_gazebo SOURCES ${extra_files})
 
 roslaunch_add_file_check(launch)
 

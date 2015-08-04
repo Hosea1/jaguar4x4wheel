@@ -1,8 +1,8 @@
-husky_joint_publisher:
+jaguar4x4wheel_joint_publisher:
   type: "joint_state_controller/JointStateController"
   publish_rate: 50
 
-husky_velocity_controller:
+jaguar4x4wheel_velocity_controller:
   type: "diff_drive_controller/DiffDriveController"
   left_wheel: ['front_left_wheel', 'rear_left_wheel']
   right_wheel: ['front_right_wheel', 'rear_right_wheel']
@@ -18,7 +18,7 @@ husky_velocity_controller:
   # no need to publish a TF based on encoders alone.
   enable_odom_tf: false
 
-  # Husky hardware provides wheel velocities
+  # Jaguar4x4wheel hardware provides wheel velocities
   estimate_velocity_from_position: false
 
   # Wheel separation and radius multipliers

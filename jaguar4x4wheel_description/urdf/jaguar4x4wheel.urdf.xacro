@@ -22,6 +22,10 @@
 
   <!-- Base footprint is on the ground under the robot -->
   <link name="base_footprint"/>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
   <!-- Base link is the center of the robot's bottom plate -->
   <link name="base_link">
     <visual>
