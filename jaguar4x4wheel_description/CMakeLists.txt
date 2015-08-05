@@ -10,11 +10,16 @@ find_package(catkin REQUIRED COMPONENTS
   xacro
 )
 
-file(GLOB_RECURSE include_files "${CMAKE_SOURCE_DIR}/urdf/*")
-file(GLOB_RECURSE launch_files "${CMAKE_SOURCE_DIR}/launch/*")
-list(APPEND extra_files ${include_files} ${launch_files})
-
-add_custom_target(jaguar4x4wheel_description SOURCES ${extra_files})
+#Add all files in subdirectories of the project in
+# a dummy_target so qtcreator have access to all files
+FILE(GLOB children ${CMAKE_SOURCE_DIR}/*)
+FOREACH(child ${children})
+  IF(IS_DIRECTORY ${child})
+    file(GLOB_RECURSE dir_files "${child}/*")
+    LIST(APPEND extra_files ${dir_files})
+  ENDIF()
+ENDFOREACH()
+add_custom_target(dummy_target SOURCES ${extra_files})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
