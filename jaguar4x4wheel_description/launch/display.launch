@@ -1,17 +1,11 @@
 <launch>
 
-  <arg name="model" default="$(find jaguar4x4wheel_description)/urdf/jaguar4x4wheel.urdf.xacro"/>
-  <arg name="laser_enabled" default="true" />
-  <arg name="kinect_enabled" default="false" />
-  <arg name="gui" default="true" />
 
-  <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)
-    laser_enabled:=$(arg laser_enabled)
-    kinect_enabled:=$(arg kinect_enabled)" />
-  <param name="use_gui" value="$(arg gui)"/>
+  <include file="$(find jaguar4x4wheel_description)/launch/description.launch"/>
+
+  <param name="use_gui" value="true"/>
 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
   <node name="rviz" pkg="rviz" type="rviz" required="true" />
 
 </launch>
