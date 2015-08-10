@@ -12,7 +12,7 @@ FOREACH(child ${children})
     LIST(APPEND extra_files ${dir_files})
   ENDIF()
 ENDFOREACH()
-add_custom_target(dummy_target SOURCES ${extra_files})
+add_custom_target(dummy_${PROJECT_NAME} SOURCES ${extra_files})
 
 catkin_package()
 

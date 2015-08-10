@@ -23,7 +23,7 @@
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>urdf</run_depend>
   <run_depend>xacro</run_depend>
-  <run_depend>urg_node</run_depend>
+  <run_depend>urg_description</run_depend>
 
 
   <export>

@@ -22,7 +22,7 @@ target_link_libraries(jaguar4x4wheel_node ${catkin_LIBRARIES} ${Boost_LIBRARIES}
 roslint_cpp(
   src/jaguar4x4wheel_base.cpp
   src/jaguar4x4wheel_hardware.cpp
-  include/jaguar4x4wheel_base/jaguar4x4wheel_hardware.h
+  src/DrRobotMotionSensorDriver.cpp
   )
 
 roslaunch_add_file_check(launch)
@@ -37,7 +37,7 @@ FOREACH(child ${children})
     LIST(APPEND extra_files ${dir_files})
   ENDIF()
 ENDFOREACH()
-add_custom_target(dummy_target SOURCES ${extra_files})
+add_custom_target(dummy_${PROJECT_NAME} SOURCES ${extra_files})
 
 install(TARGETS jaguar4x4wheel_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
