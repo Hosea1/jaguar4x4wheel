@@ -32,13 +32,13 @@
 #include "jaguar4x4wheel_base/jaguar4x4wheel_hardware.h"
 #include <boost/assign/list_of.hpp>
 
-namespace
-{
-  const uint8_t LEFT = 0, RIGHT = 1;
-};
+using namespace DrRobot_MotionSensorDriver;
 
-namespace jaguar4x4wheel_base
-{
+namespace {
+  const uint8_t LEFT = 0, RIGHT = 1;
+}
+
+namespace jaguar4x4wheel_base {
 
   /**
   * Initialize Jaguar4x4Wheel hardware
@@ -55,8 +55,12 @@ namespace jaguar4x4wheel_base
     std::string port;
     private_nh_.param<std::string>("port", port, "/dev/prolific");
 
-//    horizon_legacy::connect(port);
-//    horizon_legacy::configureLimits(max_speed_, max_accel_);
+    robot_config_.commMethod = DrRobot_MotionSensorDriver::Network;
+    robot_config_.boardType = DrRobot_MotionSensorDriver::Jaguar;
+    robot_config_.portNum = 10001;
+    strncpy(robot_config_.robotIP, "172.16.51.52", sizeof(robot_config_.robotIP) - 1);
+    drrobot_motion_driver_.setDrRobotMotionDriverConfig(&robot_config_);
+
     resetTravelOffset();
     registerControlInterfaces();
   }
@@ -66,17 +70,15 @@ namespace jaguar4x4wheel_base
   */
   void Jaguar4x4WheelHardware::resetTravelOffset()
   {
-//    horizon_legacy::Channel<clearpath::DataEncoders>::Ptr enc = horizon_legacy::Channel<clearpath::DataEncoders>::requestData(polling_timeout_);
-//    if (enc)
-//    {
-//      for (int i = 0; i < 4; i++)
-//      {
-//        joints_[i].position_offset = linearToAngular(enc->getTravel(i % 2));
-//      }
-//    }
-//    else
+    int res = drrobot_motion_driver_.openNetwork(robot_config_.robotIP,robot_config_.portNum);
+    if (res == 0)
     {
-      ROS_ERROR("Could not get encoder data to calibrate travel offset");
+      ROS_INFO("open port number at: [%d]", robot_config_.portNum);
+    }
+    else
+    {
+      ROS_ERROR("could not open network connection to [%s,%d]",  robot_config_.robotIP,robot_config_.portNum);
+      ROS_ERROR("error code [%d]",  res);
     }
   }
 
@@ -156,7 +158,15 @@ namespace jaguar4x4wheel_base
 
     limitDifferentialSpeed(diff_speed_left, diff_speed_right);
 
-    //horizon_legacy::controlSpeed(diff_speed_left, diff_speed_right, max_accel_, max_accel_);
+    double linear_speed = (diff_speed_left + diff_speed_right) * 0.5;
+    double differential_speed = diff_speed_right - diff_speed_left;
+    int forwardPWM = linear_speed * 16384 + 16384;
+    int turnPWM = differential_speed * 16384 + 16384;
+    if (forwardPWM > 32767) forwardPWM = 32767;
+    if (forwardPWM < 0) forwardPWM = 0;
+    if (turnPWM > 32767) turnPWM = 32767;
+    if (turnPWM < 0) turnPWM = 0;
+    drrobot_motion_driver_.sendMotorCtrlAllCmd(PWM,NOCONTROL,NOCONTROL,NOCONTROL,forwardPWM,turnPWM, NOCONTROL);
   }
 
   /**

@@ -15,7 +15,8 @@ include_directories(include ${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 
 add_executable(jaguar4x4wheel_node
   src/jaguar4x4wheel_base.cpp
-  src/jaguar4x4wheel_hardware.cpp)
+  src/jaguar4x4wheel_hardware.cpp
+  src/DrRobotMotionSensorDriver.cpp)
 target_link_libraries(jaguar4x4wheel_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 roslint_cpp(

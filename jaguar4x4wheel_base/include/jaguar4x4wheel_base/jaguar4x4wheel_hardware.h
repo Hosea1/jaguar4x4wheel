@@ -39,6 +39,8 @@
 #include "sensor_msgs/JointState.h"
 #include <string>
 
+#include "DrRobotMotionSensorDriver.hpp"
+
 namespace jaguar4x4wheel_base
 {
 
@@ -67,6 +69,9 @@ namespace jaguar4x4wheel_base
     void limitDifferentialSpeed(double &travel_speed_left, double &travel_speed_right);
 
     ros::NodeHandle nh_, private_nh_;
+
+    DrRobot_MotionSensorDriver::DrRobotMotionSensorDriver drrobot_motion_driver_;
+    DrRobot_MotionSensorDriver::DrRobotMotionConfig robot_config_;
 
     // ROS Control interfaces
     hardware_interface::JointStateInterface joint_state_interface_;
