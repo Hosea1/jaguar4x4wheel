@@ -1,0 +1,7 @@
+<launch>
+  <group ns="camera">
+    <node name="o3m151_node" pkg="o3m151_driver" type="o3m151_node" output="screen">
+      <param name="frame_id" value="camera_link"/>
+    </node>
+  </group>
+</launch>

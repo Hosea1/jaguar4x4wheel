@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="imu">
+    <!--<node pkg="xsens_driver" type="mtnode.py" name="xsens_driver" output="screen">
+      <param name="frame_id" value="imu_link"/>
+      <param name="frame_local" value="ENU"/>
+      <param name="frame_local_imu" value="ENU"/>
+    </node>-->
+    <include file="$(find xsens_driver)/launch/xsens_driver.launch">
+      <arg name="frame_id" value="imu_link"/>
+    </include>
+  </group>
+</launch>

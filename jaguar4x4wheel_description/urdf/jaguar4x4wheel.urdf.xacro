@@ -65,16 +65,13 @@
     <child link="inertial_link" />
   </joint>
 
-  <!-- IMU Link is the standard mounting position for the UM6 IMU.-->
-  <!-- Can be modified with environment variables in /etc/ros/setup.bash -->
+  <!-- IMU Link is the standard mounting position for the IMU.-->
   <link name="imu_link"/>
   <joint name="imu_joint" type="fixed">
-    <origin xyz="0.35 0 0.1" rpy="0 -1.5708 3.1416" />
+    <origin xyz="0.35 0 0.1" rpy="0 -${M_PI}/2 ${M_PI}" />
     <parent link="base_link" />
     <child link="imu_link" />
   </joint>
-  <gazebo reference="imu_link">
-  </gazebo>
 
   <!-- Wheel macros -->
   <xacro:jaguar_wheel wheel_prefix="front_left">
@@ -90,11 +87,7 @@
     <origin xyz="${-wheelbase/2+wheel_x_offset} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:jaguar_wheel>
 
-  <xacro:arg name="laser_enabled" default="false" />
-  <xacro:arg name="kinect_enabled" default="false" />
-
   <xacro:if value="$(arg laser_enabled)">
-
     <!-- Hokuyo UTM-30LX mounted upside down below the body -->
     <xacro:include filename="$(find urg_description)/urdf/hokuyo_utm30lx.urdf.xacro" />
     <xacro:hokuyo_utm30lx name="laser0" parent="base_link" ros_topic="scan" update_rate="40" ray_count="1081" min_angle="-135" max_angle="135">
@@ -107,18 +100,22 @@
     </xacro:hokuyo_urg_04lx_ug01_laser>-->
   </xacro:if>
 
-  <xacro:if value="$(arg kinect_enabled)">
-
-    <xacro:sensor_arch prefix="" parent="base_link">
-      <origin xyz="-0.35 ${base_y_size/2} 0.51" rpy="0 0 -3.14"/>
-    </xacro:sensor_arch>
-    <joint name="kinect_frame_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0.18 3.14" />
-      <parent link="sensor_arch_mount_link"/>
-      <child link="camera_link"/>
+  <xacro:if value="$(arg camera_enabled)">
+    <link name="camera_link"/>
+    <joint name="camera_joint" type="fixed">
+      <origin xyz="0.25 0 0.2" rpy="0 ${M_PI} 0" />
+      <parent link="base_link" />
+      <child link="camera_link" />
     </joint>
+  </xacro:if>
 
-    <xacro:kinect_camera prefix="camera"/>
+  <xacro:if value="$(arg navsat_enabled)">
+    <link name="navsat_link"/>
+    <joint name="navsat_joint" type="fixed">
+      <origin xyz="0.25 0 0.2" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="navsat_link" />
+    </joint>
   </xacro:if>
 
 </robot>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="laser_enabled" default="false" />
+  <arg name="camera_enabled" default="true" />
+
+  <include file="$(find jaguar4x4wheel_description)/launch/decription.launch">
+    <arg name="laser_enabled" value="$(arg laser_enabled)"/>
+    <arg name="camera_enabled" value="$(arg camera_enabled)"/>
+  </include>
+  <!-- Load Jaguar4x4wheel control information -->
+  <include file="$(find jaguar4x4wheel_control)/launch/control.launch"/>
+
+  <include if="$(arg laser_enabled)" file="$(find jaguar4x4wheel_bringup)/launch/laser_config/laser.launch"/>
+
+  <include if="$(arg camera_enbled)" file="$(find jaguar4x4wheel_bringup)/launch/camera_config/camera.launch"/>
+
+  <include file="$(find jaguar4x4wheel_bringup)/launch/imu_config/imu.launch"/>
+
+  <include file="$(find jaguar4x4wheel_bringup)/launch/navsat_config/navsat.launch"/>
+
+</launch>

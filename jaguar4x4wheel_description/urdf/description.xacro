@@ -1,0 +1,10 @@
+<robot name="jaguar4x4wheel_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="laser_enabled" default="false" />
+  <xacro:arg name="camera_enabled" default="false" />
+  <xacro:arg name="navsat_enabled" default="true" />
+
+  <xacro:include filename="$(find jaguar4x4wheel_description)/urdf/jaguar4x4wheel.urdf.xacro" />
+  <xacro:jaguar4x4wheel />
+
+</robot>
