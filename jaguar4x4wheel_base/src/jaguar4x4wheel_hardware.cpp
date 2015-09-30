@@ -35,7 +35,11 @@
 using namespace DrRobot_MotionSensorDriver;
 
 namespace {
-  const uint8_t LEFT = 0, RIGHT = 1;
+  const uint LEFT = 0, RIGHT = 1;
+  const float TICKS_PER_METER = 345; //345 based upon the diameter of the wheel including the track, 452 based upon the diamater of the wheel excluding the track. 345 works best inside the lab, 452 works best on the carpet outside
+  const uint ENCODER_MIN = 0;
+  const uint ENCODER_MAX = 32767;
+  const uint PULSES_PER_REVOLUTION = 185;//190; // for speed encoder
 }
 
 namespace jaguar4x4wheel_base {
@@ -47,7 +51,7 @@ namespace jaguar4x4wheel_base {
       : nh_(nh),
         private_nh_(private_nh)
   {
-    private_nh_.param<double>("wheel_diameter", wheel_diameter_, 0.3555);
+    private_nh_.param<double>("wheel_diameter", wheel_diameter_, 0.27); // or 0.3555?
     private_nh_.param<double>("max_accel", max_accel_, 5.0);
     private_nh_.param<double>("max_speed", max_speed_, 1.0);
     private_nh_.param<double>("polling_timeout_", polling_timeout_, 10.0);
@@ -109,43 +113,37 @@ namespace jaguar4x4wheel_base {
   */
   void Jaguar4x4WheelHardware::updateJointsFromHardware()
   {
+    if(drrobot_motion_driver_.portOpen())
+    {
+      drrobot_motion_driver_.readMotorSensorData(&motor_sensor_data_);
 
-//    horizon_legacy::Channel<clearpath::DataEncoders>::Ptr enc = horizon_legacy::Channel<clearpath::DataEncoders>::requestData(polling_timeout_);
-//    if (enc)
-//    {
-//      for (int i = 0; i < 4; i++)
-//      {
-//        double new_position = linearToAngular(enc->getTravel(i % 2)) - joints_[i].position_offset;
-//        double delta = new_position - joints_[i].position;
+      // Translate from driver data to ROS data
+      //motors used are 3 & 4
+      //3 is left motor
+      //4 is right motor
+      for (uint i = 0 ; i < 4; ++i)
+      {
+        double delta = linearToAngular(double(motor_sensor_data_.motorSensorEncoderPos[i])/double(TICKS_PER_METER)) - joints_[i].position_offset - joints_[i].position;
 
-//        // detect encoder rollover
-//        if (std::abs(delta) < 1.0)
-//        {
-//          joints_[i].position = new_position;
-//        }
-//        else
-//        {
-//          //  rollover has occured, swallow the measurement and update the offset
-//          joints_[i].position_offset = delta;
-//        }
-//      }
-//    }
+        // detect suspiciously large readings, possibly from encoder rollover
+        if (std::abs(delta) < 1.0)
+        {
+          joints_[i].position += delta;
+        }
+        else
+        {
+          // suspicious! drop this measurement and update the offset for subsequent readings
+          joints_[i].position_offset += delta;
+        }
 
-//    horizon_legacy::Channel<clearpath::DataDifferentialSpeed>::Ptr speed = horizon_legacy::Channel<clearpath::DataDifferentialSpeed>::requestData(polling_timeout_);
-//    if (speed)
-//    {
-//      for (int i = 0; i < 4; i++)
-//      {
-//        if (i % 2 == LEFT)
-//        {
-//          joints_[i].velocity = linearToAngular(speed->getLeftSpeed());
-//        }
-//        else
-//        { // assume RIGHT
-//          joints_[i].velocity = linearToAngular(speed->getRightSpeed());
-//        }
-//      }
-//    }
+        double velocity = double(motor_sensor_data_.motorSensorEncoderVel[i])*double(PULSES_PER_REVOLUTION)*2.0*M_PI;
+        if(motor_sensor_data_.motorSensorEncoderDir[i] == 0)
+          velocity = -velocity;
+
+        joints_[i].velocity = velocity ;
+      }
+    }
+
   }
 
   /**
