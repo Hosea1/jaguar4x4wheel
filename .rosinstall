@@ -1,0 +1,6 @@
+- git:
+    local-name: jaguar4x4wheel
+    uri: https://github.com/vincentrou/jaguar4x4wheel.git
+- git:
+    local-name: urg_node
+    uri: https://github.com/vincentrou/urg_node.git
