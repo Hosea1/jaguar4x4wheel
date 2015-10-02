@@ -503,15 +503,15 @@ void DrRobot_MotionSensorDriver::DrRobotMotionSensorDriver::DealWithPacket(const
               }
               else
               {
-                _motorSensorData.motorSensorEncoderDir[0] = -1;
+                _motorSensorData.motorSensorEncoderDir[0] = 0;
               }
               if (lpComData[INDEX_DATA + 32] & 0x02)
               {
-                _motorSensorData.motorSensorEncoderDir[1] = 1;
+                _motorSensorData.motorSensorEncoderDir[1] = 0;
               }
               else
               {
-                _motorSensorData.motorSensorEncoderDir[1] = -1;
+                _motorSensorData.motorSensorEncoderDir[1] = 1;
               }
               pthread_mutex_unlock(&_mutex_Data_Buf);
               break;
@@ -565,11 +565,11 @@ void DrRobot_MotionSensorDriver::DrRobotMotionSensorDriver::DealWithPacket(const
 		temp = lpComData[INDEX_DATA + 27] + lpComData[INDEX_DATA + 28] * 256;
                 if (temp & 0x01)
                 {
-                  _motorSensorData.motorSensorEncoderDir[4] = 1;
+                  _motorSensorData.motorSensorEncoderDir[4] = 0;
                 }
                 else
                 {
-                  _motorSensorData.motorSensorEncoderDir[4] = 0;
+                  _motorSensorData.motorSensorEncoderDir[4] = 1;
                 }
               }
 

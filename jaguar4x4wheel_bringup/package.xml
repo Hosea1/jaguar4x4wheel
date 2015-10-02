@@ -21,5 +21,11 @@
   <run_depend>jaguar4x4wheel_base</run_depend>
   <run_depend>jaguar4x4wheel_control</run_depend>
   <run_depend>jaguar4x4wheel_description</run_depend>
+  <run_depend>o3m151_driver</run_depend>
+  <run_depend>xsens_driver</run_depend>
+  <run_depend>urg_node</run_depend>
+  <run_depend>nmea_comms</run_depend>
+  <run_depend>nmea_navsat_driver</run_depend>
+  <run_depend>robot_localization</run_depend>
 
 </package>

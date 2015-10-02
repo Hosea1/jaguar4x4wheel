@@ -39,7 +39,7 @@ namespace {
   const float TICKS_PER_METER = 345; //345 based upon the diameter of the wheel including the track, 452 based upon the diamater of the wheel excluding the track. 345 works best inside the lab, 452 works best on the carpet outside
   const uint ENCODER_MIN = 0;
   const uint ENCODER_MAX = 32767;
-  const uint PULSES_PER_REVOLUTION = 185;//190; // for speed encoder
+  const uint PULSES_PER_REVOLUTION = 186;//190; // for speed encoder
 }
 
 namespace jaguar4x4wheel_base {
@@ -92,8 +92,8 @@ namespace jaguar4x4wheel_base {
   */
   void Jaguar4x4WheelHardware::registerControlInterfaces()
   {
-    ros::V_string joint_names = boost::assign::list_of("front_left_wheel")
-        ("front_right_wheel")("rear_left_wheel")("rear_right_wheel");
+    ros::V_string joint_names = boost::assign::list_of("rear_left_wheel")("rear_right_wheel")("front_left_wheel")
+                                ("front_right_wheel");
     for (unsigned int i = 0; i < joint_names.size(); i++)
     {
       hardware_interface::JointStateHandle joint_state_handle(joint_names[i],
@@ -121,9 +121,19 @@ namespace jaguar4x4wheel_base {
       //motors used are 3 & 4
       //3 is left motor
       //4 is right motor
-      for (uint i = 0 ; i < 4; ++i)
+      for (uint j = 0 ; j < 4; ++j)
       {
-        double delta = linearToAngular(double(motor_sensor_data_.motorSensorEncoderPos[i])/double(TICKS_PER_METER)) - joints_[i].position_offset - joints_[i].position;
+        uint i = j;
+        if(j > 1)
+          j++;
+//        if( j == 3)
+//          ROS_DEBUG_STREAM(" motorSensorEncoderPos[i] "<<motor_sensor_data_.motorSensorEncoderPos[j]
+//                           <<" motorSensorEncoderVel[i] "<<motor_sensor_data_.motorSensorEncoderVel[j]
+//                           <<" motorSensorEncoderDir[i] "<<motor_sensor_data_.motorSensorEncoderDir[j]);
+        double delta = double(motor_sensor_data_.motorSensorEncoderPos[j])/double(PULSES_PER_REVOLUTION)*2.0*M_PI;
+        if(j == 1 || j == 4)
+          delta = -delta;
+        delta += - joints_[i].position_offset - joints_[i].position;
 
         // detect suspiciously large readings, possibly from encoder rollover
         if (std::abs(delta) < 1.0)
@@ -136,11 +146,15 @@ namespace jaguar4x4wheel_base {
           joints_[i].position_offset += delta;
         }
 
-        double velocity = double(motor_sensor_data_.motorSensorEncoderVel[i])*double(PULSES_PER_REVOLUTION)*2.0*M_PI;
-        if(motor_sensor_data_.motorSensorEncoderDir[i] == 0)
+        double velocity = double(motor_sensor_data_.motorSensorEncoderVel[j])/double(PULSES_PER_REVOLUTION)*2.0*M_PI;
+        if(motor_sensor_data_.motorSensorEncoderDir[j] == 0)
           velocity = -velocity;
 
         joints_[i].velocity = velocity ;
+        if(i == 0)
+          ROS_DEBUG_STREAM(i<<" delta "<<angularToLinear(delta)<<" m velocity "<<angularToLinear(velocity)<<" m/s");
+        if(i == 1)
+          ROS_DEBUG_STREAM(i<<" delta "<<angularToLinear(delta)<<" m velocity "<<angularToLinear(velocity)<<" m/s");
       }
     }
 
@@ -157,8 +171,8 @@ namespace jaguar4x4wheel_base {
     limitDifferentialSpeed(diff_speed_left, diff_speed_right);
 
     double linear_speed = (diff_speed_left + diff_speed_right) * 0.5;
-    double differential_speed = diff_speed_right - diff_speed_left;
-    int forwardPWM = linear_speed * 16384 + 16384;
+    double differential_speed = diff_speed_left - diff_speed_right;
+    int forwardPWM = -linear_speed * 16384 + 16384;
     int turnPWM = differential_speed * 16384 + 16384;
     if (forwardPWM > 32767) forwardPWM = 32767;
     if (forwardPWM < 0) forwardPWM = 0;
