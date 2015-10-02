@@ -35,7 +35,6 @@
 using namespace DrRobot_MotionSensorDriver;
 
 namespace {
-  const uint LEFT = 0, RIGHT = 1;
   const float TICKS_PER_METER = 345; //345 based upon the diameter of the wheel including the track, 452 based upon the diamater of the wheel excluding the track. 345 works best inside the lab, 452 works best on the carpet outside
   const uint ENCODER_MIN = 0;
   const uint ENCODER_MAX = 32767;
@@ -165,20 +164,14 @@ namespace jaguar4x4wheel_base {
   */
   void Jaguar4x4WheelHardware::writeCommandsToHardware()
   {
-    double diff_speed_left = angularToLinear(joints_[LEFT].velocity_command);
-    double diff_speed_right = angularToLinear(joints_[RIGHT].velocity_command);
+    double diff_speed_left_rear = joints_[0].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
+    double diff_speed_right_rear = -joints_[1].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
+    double diff_speed_left_front = joints_[2].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
+    double diff_speed_right_front = -joints_[3].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
 
-    limitDifferentialSpeed(diff_speed_left, diff_speed_right);
-
-    double linear_speed = (diff_speed_left + diff_speed_right) * 0.5;
-    double differential_speed = diff_speed_left - diff_speed_right;
-    int forwardPWM = -linear_speed * 16384 + 16384;
-    int turnPWM = differential_speed * 16384 + 16384;
-    if (forwardPWM > 32767) forwardPWM = 32767;
-    if (forwardPWM < 0) forwardPWM = 0;
-    if (turnPWM > 32767) turnPWM = 32767;
-    if (turnPWM < 0) turnPWM = 0;
-    drrobot_motion_driver_.sendMotorCtrlAllCmd(PWM,NOCONTROL,NOCONTROL,NOCONTROL,forwardPWM,turnPWM, NOCONTROL);
+    // for Jaguar 4x4 independent drive, channel 0 for left rear motor, channel 1 for right rear motor, channel 3 for left front motor, channel 4 for right front motor, here we will use velocity control
+    drrobot_motion_driver_.sendMotorCtrlAllCmd(Velocity,diff_speed_left_rear, diff_speed_right_rear,NOCONTROL,
+                                                        diff_speed_left_front, diff_speed_right_front,NOCONTROL);
   }
 
   /**
