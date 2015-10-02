@@ -1,0 +1,7 @@
+set terminal wxt persist
+set datafile separator ","
+set grid
+file= "./gps.dat"
+file2= "./filtered_gps.dat"
+
+plot file using 6:7 every ::1, file2 using 6:7
