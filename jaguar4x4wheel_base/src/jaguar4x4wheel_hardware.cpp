@@ -52,7 +52,7 @@ namespace jaguar4x4wheel_base {
   {
     private_nh_.param<double>("wheel_diameter", wheel_diameter_, 0.27); // or 0.3555?
     private_nh_.param<double>("max_accel", max_accel_, 5.0);
-    private_nh_.param<double>("max_speed", max_speed_, 1.0);
+    private_nh_.param<double>("max_speed", max_speed_, 3.0);
     private_nh_.param<double>("polling_timeout_", polling_timeout_, 10.0);
 
     std::string port;
@@ -124,35 +124,35 @@ namespace jaguar4x4wheel_base {
       {
         uint i = j;
         if(j > 1)
-          j++;
+          i = j+1;
 //        if( j == 3)
 //          ROS_DEBUG_STREAM(" motorSensorEncoderPos[i] "<<motor_sensor_data_.motorSensorEncoderPos[j]
 //                           <<" motorSensorEncoderVel[i] "<<motor_sensor_data_.motorSensorEncoderVel[j]
 //                           <<" motorSensorEncoderDir[i] "<<motor_sensor_data_.motorSensorEncoderDir[j]);
-        double delta = double(motor_sensor_data_.motorSensorEncoderPos[j])/double(PULSES_PER_REVOLUTION)*2.0*M_PI;
-        if(j == 1 || j == 4)
+        double delta = double(motor_sensor_data_.motorSensorEncoderPos[i])/double(PULSES_PER_REVOLUTION)*2.0*M_PI;
+        if(i == 1 || i == 4)
           delta = -delta;
-        delta += - joints_[i].position_offset - joints_[i].position;
+        delta += - joints_[j].position_offset - joints_[j].position;
 
         // detect suspiciously large readings, possibly from encoder rollover
         if (std::abs(delta) < 1.0)
         {
-          joints_[i].position += delta;
+          joints_[j].position += delta;
         }
         else
         {
           // suspicious! drop this measurement and update the offset for subsequent readings
-          joints_[i].position_offset += delta;
+          joints_[j].position_offset += delta;
         }
 
-        double velocity = double(motor_sensor_data_.motorSensorEncoderVel[j])/double(PULSES_PER_REVOLUTION)*2.0*M_PI;
-        if(motor_sensor_data_.motorSensorEncoderDir[j] == 0)
+        double velocity = double(motor_sensor_data_.motorSensorEncoderVel[i])/double(PULSES_PER_REVOLUTION)*2.0*M_PI;
+        if(motor_sensor_data_.motorSensorEncoderDir[i] == 0)
           velocity = -velocity;
 
-        joints_[i].velocity = velocity ;
-        if(i == 0)
+        joints_[j].velocity = velocity ;
+        if(j == 2)
           ROS_DEBUG_STREAM(i<<" delta "<<angularToLinear(delta)<<" m velocity "<<angularToLinear(velocity)<<" m/s");
-        if(i == 1)
+        if(j == 3)
           ROS_DEBUG_STREAM(i<<" delta "<<angularToLinear(delta)<<" m velocity "<<angularToLinear(velocity)<<" m/s");
       }
     }
@@ -164,14 +164,27 @@ namespace jaguar4x4wheel_base {
   */
   void Jaguar4x4WheelHardware::writeCommandsToHardware()
   {
-    double diff_speed_left_rear = joints_[0].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
-    double diff_speed_right_rear = -joints_[1].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
-    double diff_speed_left_front = joints_[2].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
-    double diff_speed_right_front = -joints_[3].velocity_command * PULSES_PER_REVOLUTION / (2*M_PI);
+    // roue décollée
+    // -1   => 3m/s
+    // -0.8 => 2.2m/s
+    // -0.5 => 1m/s
+    // -0.2 => 0.3m/s
+    double diff_speed_left = angularToLinear(joints_[0].velocity_command)/2;
+    double diff_speed_right = angularToLinear(joints_[1].velocity_command)/2;
 
-    // for Jaguar 4x4 independent drive, channel 0 for left rear motor, channel 1 for right rear motor, channel 3 for left front motor, channel 4 for right front motor, here we will use velocity control
-    drrobot_motion_driver_.sendMotorCtrlAllCmd(Velocity,diff_speed_left_rear, diff_speed_right_rear,NOCONTROL,
-                                                        diff_speed_left_front, diff_speed_right_front,NOCONTROL);
+//    ROS_INFO_STREAM("diff_speed_left_rear "<<diff_speed_left <<
+//                    "diff_speed_right_rear "<<diff_speed_right);
+    limitDifferentialSpeed(diff_speed_left, diff_speed_right);
+
+    double linear_speed = (diff_speed_left + diff_speed_right) * 0.5;
+    double differential_speed = diff_speed_left - diff_speed_right;
+    int forwardPWM = -linear_speed * 16384 + 16384;
+    int turnPWM = differential_speed * 16384 + 16384;
+    if (forwardPWM > ENCODER_MAX) forwardPWM = ENCODER_MAX;
+    if (forwardPWM < 0) forwardPWM = 0;
+    if (turnPWM > ENCODER_MAX) turnPWM = ENCODER_MAX;
+    if (turnPWM < 0) turnPWM = 0;
+    drrobot_motion_driver_.sendMotorCtrlAllCmd(PWM,NOCONTROL,NOCONTROL,NOCONTROL,forwardPWM,turnPWM, NOCONTROL);
   }
 
   /**
