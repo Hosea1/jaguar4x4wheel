@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 2.8.3)
 project(jaguar4x4wheel_base)
 
 find_package(catkin REQUIRED COMPONENTS controller_manager hardware_interface
-  roslaunch roslint  roscpp sensor_msgs)
+  roslaunch roslint  roscpp sensor_msgs control_toolbox)
 find_package(Boost REQUIRED)
 
 catkin_package(
     INCLUDE_DIRS include
-    CATKIN_DEPENDS hardware_interface roscpp sensor_msgs
+    CATKIN_DEPENDS hardware_interface roscpp sensor_msgs control_toolbox
     DEPENDS Boost
 )
 

@@ -49,7 +49,7 @@ void controlLoop(jaguar4x4wheel_base::Jaguar4x4WheelHardware &jaguar4x4wheel,
   // Process control loop
   jaguar4x4wheel.updateJointsFromHardware();
   cm.update(ros::Time::now(), elapsed);
-  jaguar4x4wheel.writeCommandsToHardware();
+  jaguar4x4wheel.writeCommandsToHardware(elapsed);
 }
 
 int main(int argc, char *argv[])

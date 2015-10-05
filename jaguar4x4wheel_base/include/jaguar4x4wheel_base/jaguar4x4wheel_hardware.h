@@ -35,6 +35,7 @@
 #include "hardware_interface/joint_state_interface.h"
 #include "hardware_interface/joint_command_interface.h"
 #include "hardware_interface/robot_hw.h"
+#include <control_toolbox/pid.h>
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 #include <string>
@@ -54,7 +55,7 @@ namespace jaguar4x4wheel_base
 
     void updateJointsFromHardware();
 
-    void writeCommandsToHardware();
+    void writeCommandsToHardware(ros::Duration &dt);
 
   private:
 
@@ -77,6 +78,8 @@ namespace jaguar4x4wheel_base
     // ROS Control interfaces
     hardware_interface::JointStateInterface joint_state_interface_;
     hardware_interface::VelocityJointInterface velocity_joint_interface_;
+
+    control_toolbox::Pid pid_controller_left_, pid_controller_right_;
 
     // ROS Parameters
     double wheel_diameter_, max_accel_, max_speed_;

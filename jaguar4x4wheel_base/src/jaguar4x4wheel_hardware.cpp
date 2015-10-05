@@ -64,8 +64,14 @@ namespace jaguar4x4wheel_base {
     strncpy(robot_config_.robotIP, "172.16.51.52", sizeof(robot_config_.robotIP) - 1);
     drrobot_motion_driver_.setDrRobotMotionDriverConfig(&robot_config_);
 
+    pid_controller_left_.init(ros::NodeHandle(private_nh_, "pid_parameters"));
+    pid_controller_left_.reset();
+    pid_controller_right_.init(ros::NodeHandle(private_nh_, "pid_parameters"));
+    pid_controller_right_.reset();
+
     resetTravelOffset();
     registerControlInterfaces();
+
   }
 
   /**
@@ -162,15 +168,17 @@ namespace jaguar4x4wheel_base {
   /**
   * Get latest velocity commands from ros_control via joint structure, and send to MCU
   */
-  void Jaguar4x4WheelHardware::writeCommandsToHardware()
+  void Jaguar4x4WheelHardware::writeCommandsToHardware(ros::Duration& dt)
   {
+    double diff_speed_left = pid_controller_left_.computeCommand(joints_[0].velocity - joints_[0].velocity_command, dt);
+    double diff_speed_right = pid_controller_right_.computeCommand(joints_[0].velocity - joints_[0].velocity_command, dt);
     // roue décollée
     // -1   => 3m/s
     // -0.8 => 2.2m/s
     // -0.5 => 1m/s
     // -0.2 => 0.3m/s
-    double diff_speed_left = angularToLinear(joints_[0].velocity_command)/2;
-    double diff_speed_right = angularToLinear(joints_[1].velocity_command)/2;
+    diff_speed_left = angularToLinear(diff_speed_left);
+    diff_speed_right = angularToLinear(diff_speed_right);
 
 //    ROS_INFO_STREAM("diff_speed_left_rear "<<diff_speed_left <<
 //                    "diff_speed_right_rear "<<diff_speed_right);

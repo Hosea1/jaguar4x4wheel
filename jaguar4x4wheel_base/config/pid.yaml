@@ -1,0 +1,6 @@
+jaguar4x4wheel_base:
+  pid_parameters:
+    p: 2.0
+    k: 6.0  #0.816
+    d: 0.0
+    i_clamp: 20.0
