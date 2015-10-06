@@ -170,18 +170,25 @@ namespace jaguar4x4wheel_base {
   */
   void Jaguar4x4WheelHardware::writeCommandsToHardware(ros::Duration& dt)
   {
-    double diff_speed_left = pid_controller_left_.computeCommand(joints_[0].velocity - joints_[0].velocity_command, dt);
-    double diff_speed_right = pid_controller_right_.computeCommand(joints_[0].velocity - joints_[0].velocity_command, dt);
+//    double diff_speed_left = pid_controller_left_.computeCommand(
+//                               joints_[0].velocity_command - (joints_[0].velocity+joints_[2].velocity)/2, dt);
+//    double diff_speed_right = pid_controller_right_.computeCommand(
+//                                joints_[1].velocity_command - (joints_[1].velocity+joints_[3].velocity)/2, dt);
+//    diff_speed_left = angularToLinear(diff_speed_left);
+//    diff_speed_right = angularToLinear(diff_speed_right);
+
     // roue décollée
     // -1   => 3m/s
     // -0.8 => 2.2m/s
     // -0.5 => 1m/s
     // -0.2 => 0.3m/s
-    diff_speed_left = angularToLinear(diff_speed_left);
-    diff_speed_right = angularToLinear(diff_speed_right);
-
+    double diff_speed_left = angularToLinear(joints_[0].velocity_command);
+    double diff_speed_right = angularToLinear(joints_[1].velocity_command);
 //    ROS_INFO_STREAM("diff_speed_left_rear "<<diff_speed_left <<
-//                    "diff_speed_right_rear "<<diff_speed_right);
+//                    " joints_[0].velocity "<<joints_[0].velocity<<
+//                    " joints_[0].velocity_command "<<joints_[0].velocity_command<<
+//                    " error "<<joints_[0].velocity_command - joints_[0].velocity);
+
     limitDifferentialSpeed(diff_speed_left, diff_speed_right);
 
     double linear_speed = (diff_speed_left + diff_speed_right) * 0.5;
