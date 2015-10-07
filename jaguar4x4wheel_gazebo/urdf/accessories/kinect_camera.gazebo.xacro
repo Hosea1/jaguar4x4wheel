@@ -19,8 +19,8 @@
         <horizontal_fov>${60.0*M_PI/180.0}</horizontal_fov>
         <image>
           <format>R8G8B8</format>
-          <width>640</width>
-          <height>480</height>
+          <width>64</width>
+          <height>16</height>
         </image>
         <clip>
           <near>0.05</near>
@@ -30,7 +30,7 @@
       <plugin name="kinect_${prefix}_controller" filename="libgazebo_ros_openni_kinect.so">
         <cameraName>${prefix}</cameraName>
         <alwaysOn>true</alwaysOn>
-        <updateRate>10</updateRate>
+        <updateRate>25</updateRate>
         <imageTopicName>rgb/image_raw</imageTopicName>
         <depthImageTopicName>depth/image_raw</depthImageTopicName>
         <pointCloudTopicName>depth/points</pointCloudTopicName>

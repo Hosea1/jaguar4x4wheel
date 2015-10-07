@@ -103,7 +103,7 @@
   <xacro:if value="$(arg camera_enabled)">
     <link name="camera_link"/>
     <joint name="camera_joint" type="fixed">
-      <origin xyz="0.25 0 0.2" rpy="0 ${M_PI} 0" />
+      <origin xyz="0.25 0 0.2" rpy="0 0 0" />
       <parent link="base_link" />
       <child link="camera_link" />
     </joint>
