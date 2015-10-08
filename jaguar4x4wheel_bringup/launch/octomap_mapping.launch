@@ -2,9 +2,9 @@
 	<node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
 		<param name="resolution" value="0.05" />
     <param name="filter_ground" value="true"/>
-    <param name="ground_filter/distance" value="0.04"/>
-    <param name="ground_filter/angle" value="0.15"/>
-    <param name="ground_filter/plane_distance" value="0.07"/>
+    <param name="ground_filter/distance" value="0.1"/>
+    <param name="ground_filter/angle" value="0.25"/>
+    <param name="ground_filter/plane_distance" value="2.07"/>
 		
 		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
     <param name="frame_id" type="string" value="map" />

@@ -2,7 +2,7 @@
 <!--
 Software License Agreement (BSD)
 
-\file      gazebo_description.launch
+\file      jaguar4x4wheel_playpen.launch
 \authors   Paul Bovbel <pbovbel@clearpathrobotics.com
 \copyright Copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
 
@@ -10,7 +10,7 @@ Redistribution and use in source and binary forms, with or without modification,
 the following conditions are met:
  * Redistributions of source code must retain the above copyright notice, this list of conditions and the
    following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
    following disclaimer in the documentation and/or other materials provided with the distribution.
  * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or promote
    products derived from this software without specific prior written permission.
@@ -25,21 +25,15 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 -->
 <launch>
 
-  <arg name="laser_enabled" default="false"/>
-  <arg name="camera_enabled" default="false"/>
+  <arg name="laser_enabled" default="true"/>
+  <arg name="camera_enabled" default="true"/>
 
-  <param name="robot_description" command="$(find xacro)/xacro.py $(find jaguar4x4wheel_gazebo)/urdf/description.gazebo.xacro
-    laser_enabled:=$(arg laser_enabled)
-    camera_enabled:=$(arg camera_enabled)
-    " />
-
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-
-  <!-- Load Jaguar4x4wheel control information -->
-  <include file="$(find jaguar4x4wheel_control)/launch/control.launch"/>
-
-  <!-- Spawn robot in gazebo -->
-  <node name="spawn_jaguar4x4wheel_model" pkg="gazebo_ros" type="spawn_model"
-    args="$(optenv ROBOT_INITIAL_POSE) -unpause -urdf -z 0.5 -param robot_description -model mobile_base"/>
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find jaguar4x4wheel_gazebo)/launch/jaguar4x4wheel_empty_world.launch">
+    <!--<arg name="world_name" value="$(find jaguar4x4wheel_gazebo)/worlds/clearpath_playpen.world"/>-->
+    <arg name="world_name" value="$(find hector_gazebo_worlds)/worlds/rolling_landscape_120m.world"/>
+    <arg name="laser_enabled" value="$(arg laser_enabled)"/>
+    <arg name="camera_enabled" value="$(arg camera_enabled)"/>
+  </include>
 
 </launch>
