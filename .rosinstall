@@ -5,3 +5,10 @@
     local-name: urg_node
     uri: https://github.com/vincentrou/urg_node.git
     version: sensor_description
+- git:
+    local-name: xsens_driver
+    uri: https://github.com/vincentrou/ethzasl_xsens_driver.git 
+    version: waitfor_do_not_exit
+- git:
+    local-name: zed-ros-wrapper
+    uri: https://github.com/vincentrou/zed-ros-wrapper.git
