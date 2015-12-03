@@ -7,15 +7,21 @@ jaguar4x4wheel
 
 ### Install wstool and catkin-tools
 
-  ```bash
+```bash
 sudo apt-get install python-wstool python-catkin-tools
 ```
 
 ### Clone repo in catkin workspace
 
- ```bash
+```bash
 cd ~/catkin_ws/src/
 git clone https://github.com/vincentrou/jaguar4x4wheel.git
+```
+
+### Download missing ros dependency
+
+```bash
+rosdep install jaguar4x4wheel_bringup
 ```
 
 ### Download other repos with wstool
