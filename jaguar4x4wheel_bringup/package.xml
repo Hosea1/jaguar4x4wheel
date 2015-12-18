@@ -19,8 +19,14 @@
   <run_depend>jaguar4x4wheel_control</run_depend>
   <run_depend>jaguar4x4wheel_description</run_depend>-->
   <!--<run_depend>o3m151_driver</run_depend>-->
+  <run_depend>joy</run_depend>
+  <run_depend>teleop_twist_joy</run_depend>
+  <run_depend>twist_mux</run_depend>
+  <run_depend>interactive_marker_twist_server</run_depend>
   <run_depend>controller_manager</run_depend>
   <run_depend>control_toolbox</run_depend>
+  <run_depend>joint_state_controller</run_depend>
+  <run_depend>diff_drive_controller</run_depend>
   <run_depend>laser_proc</run_depend>
   <run_depend>urg_c</run_depend>
   <run_depend>nmea_comms</run_depend>
