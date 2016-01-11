@@ -52,7 +52,7 @@ namespace jaguar4x4wheel_base {
   {
     private_nh_.param<double>("wheel_diameter", wheel_diameter_, 0.27); // or 0.3555?
     private_nh_.param<double>("max_accel", max_accel_, 5.0);
-    private_nh_.param<double>("max_speed", max_speed_, 3.0);
+    private_nh_.param<double>("max_speed", max_speed_, 2.0);
     private_nh_.param<double>("polling_timeout_", polling_timeout_, 10.0);
 
     std::string port;
@@ -69,6 +69,7 @@ namespace jaguar4x4wheel_base {
     pid_controller_right_.init(ros::NodeHandle(private_nh_, "pid_parameters"));
     pid_controller_right_.reset();
 
+    init_gains_ = pid_controller_left_.getGains();
     resetTravelOffset();
     registerControlInterfaces();
 
@@ -170,24 +171,48 @@ namespace jaguar4x4wheel_base {
   */
   void Jaguar4x4WheelHardware::writeCommandsToHardware(ros::Duration& dt)
   {
-//    double diff_speed_left = pid_controller_left_.computeCommand(
-//                               joints_[0].velocity_command - (joints_[0].velocity+joints_[2].velocity)/2, dt);
-//    double diff_speed_right = pid_controller_right_.computeCommand(
-//                                joints_[1].velocity_command - (joints_[1].velocity+joints_[3].velocity)/2, dt);
-//    diff_speed_left = angularToLinear(diff_speed_left);
-//    diff_speed_right = angularToLinear(diff_speed_right);
+    double error_left = joints_[0].velocity_command - (joints_[0].velocity+joints_[2].velocity)/2;
+    double error_right = joints_[1].velocity_command - (joints_[1].velocity+joints_[3].velocity)/2;
+
+    control_toolbox::Pid::Gains new_gains_left = init_gains_;
+    control_toolbox::Pid::Gains new_gains_right = init_gains_;
+    if(fabs(joints_[0].velocity_command) < 0.5)
+    {
+      new_gains_left.i_gain_ = 0;
+      pid_controller_left_.reset();
+    }
+    if(fabs(joints_[1].velocity_command) < 0.5)
+    {
+      new_gains_right.i_gain_ = 0;
+      pid_controller_right_.reset();
+    }
+
+    if(fabs(error_left) < 0.1)
+      new_gains_left.p_gain_ = 0;
+    if(fabs(error_right) < 0.1)
+      new_gains_right.p_gain_ = 0;
+
+    pid_controller_left_.setGains(new_gains_left);
+    pid_controller_right_.setGains(new_gains_right);
+
+    double diff_speed_left = pid_controller_left_.computeCommand(error_left, dt);
+    double diff_speed_right = pid_controller_right_.computeCommand(error_right, dt);
+    control_toolbox::Pid::Gains gain = pid_controller_left_.getGains();
+    ROS_DEBUG_STREAM("diff_speed_left_rear "<<diff_speed_left <<
+                    " joints_[0].velocity "<<joints_[0].velocity<<
+                    " joints_[0].velocity_command "<<joints_[0].velocity_command<<
+                    " error_left "<<error_left<<
+                    " i left gain "<<gain.i_gain_);
+    diff_speed_left = angularToLinear(diff_speed_left);
+    diff_speed_right = angularToLinear(diff_speed_right);
 
     // roue décollée
     // -1   => 3m/s
     // -0.8 => 2.2m/s
     // -0.5 => 1m/s
     // -0.2 => 0.3m/s
-    double diff_speed_left = angularToLinear(joints_[0].velocity_command);
-    double diff_speed_right = angularToLinear(joints_[1].velocity_command);
-//    ROS_INFO_STREAM("diff_speed_left_rear "<<diff_speed_left <<
-//                    " joints_[0].velocity "<<joints_[0].velocity<<
-//                    " joints_[0].velocity_command "<<joints_[0].velocity_command<<
-//                    " error "<<joints_[0].velocity_command - joints_[0].velocity);
+//    double diff_speed_left = angularToLinear(joints_[0].velocity_command);
+//    double diff_speed_right = angularToLinear(joints_[1].velocity_command);
 
     limitDifferentialSpeed(diff_speed_left, diff_speed_right);
 

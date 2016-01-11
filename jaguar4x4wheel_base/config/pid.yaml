@@ -1,6 +1,6 @@
 jaguar4x4wheel_node:
   pid_parameters:
-    p: 0.27
-    i: 0.816
+    p: 0.15
+    i: 0.8
     d: 0.0
-    i_clamp: 3.0
+    i_clamp: 14.0

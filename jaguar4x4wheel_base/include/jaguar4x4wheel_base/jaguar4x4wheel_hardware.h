@@ -80,6 +80,7 @@ namespace jaguar4x4wheel_base
     hardware_interface::VelocityJointInterface velocity_joint_interface_;
 
     control_toolbox::Pid pid_controller_left_, pid_controller_right_;
+    control_toolbox::Pid::Gains init_gains_;
 
     // ROS Parameters
     double wheel_diameter_, max_accel_, max_speed_;
