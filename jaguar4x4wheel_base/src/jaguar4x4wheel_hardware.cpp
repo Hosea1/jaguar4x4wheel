@@ -142,7 +142,7 @@ namespace jaguar4x4wheel_base {
         delta += - joints_[j].position_offset - joints_[j].position;
 
         // detect suspiciously large readings, possibly from encoder rollover
-        if (std::abs(delta) < 1.0)
+        if (std::abs(delta) < 3.0)
         {
           joints_[j].position += delta;
         }
