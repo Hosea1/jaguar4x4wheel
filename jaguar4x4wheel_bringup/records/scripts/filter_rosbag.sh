@@ -1,0 +1,1 @@
+rosbag filter 2015-11-25-15-09-30.bag 2015-11-25-15-09-30_raw.bag "topic == '/tf' or topic == '/camera/o3m151_points' or topic == '/imu/data' or topic == '/jaguar4x4wheel_velocity_controller/odom' or topic == '/jaguar4x4wheel_velocity_controller/cmd_vel'"
