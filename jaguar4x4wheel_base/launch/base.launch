@@ -46,8 +46,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <!-- Differential controller parameters and basic localization -->
   <include file="$(find jaguar4x4wheel_control)/launch/control.launch" />
 
-  <!--Teleop -->
-  <include file="$(find jaguar4x4wheel_control)/launch/teleop.launch" />
-  <include file="$(find jaguar4x4wheel_control)/launch/teleop_goal.launch" />
-
 </launch>

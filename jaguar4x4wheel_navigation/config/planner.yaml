@@ -1,4 +1,4 @@
-controller_frequency: 5.0
+controller_frequency: 10.0
 recovery_behaviour_enabled: true
 
 NavfnROS:
@@ -68,8 +68,8 @@ DWAPlannerROS:
   min_rot_vel: 0.2
 
   # Goal Tolerance Parameters
-  yaw_goal_tolerance: 0.1
-  xy_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.2
+  xy_goal_tolerance: 0.4
   latch_xy_goal_tolerance: false
 
   # # Forward Simulation Parameters

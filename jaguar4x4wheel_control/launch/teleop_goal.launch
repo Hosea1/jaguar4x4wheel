@@ -1,16 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-
-  <arg name="joy_dev" default="/dev/input/js0" />
-
   <group ns="joy_teleop">
-
-    <rosparam command="load" file="$(find jaguar4x4wheel_control)/config/teleop.yaml" />
-
-    <node pkg="joy" type="joy_node" name="joy_node">
-      <param name="dev" value="$(arg joy_dev)" />
-    </node>
-
     <node pkg="jaguar4x4wheel_control" type="teleop_goal.py" name="teleop_goal" output="screen"/>
   </group>
 

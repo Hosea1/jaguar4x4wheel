@@ -36,4 +36,7 @@
     <remap from="cmd_vel_out" to="jaguar4x4wheel_velocity_controller/cmd_vel"/>
   </node>
 
+  <!--Teleop -->
+  <include file="$(find jaguar4x4wheel_control)/launch/teleop.launch" />
+  <include file="$(find jaguar4x4wheel_control)/launch/teleop_goal.launch" />
 </launch>
