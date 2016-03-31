@@ -24,5 +24,5 @@ imu0_config: [false, false, false,
 imu0_differential: false
 imu0_remove_gravitational_acceleration: true
 
-debug: true
+debug: false
 debug_out_file: robot_loc_debug.txt
