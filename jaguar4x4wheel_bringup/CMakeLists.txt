@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(jaguar4x4wheel_bringup)
 
 find_package(catkin REQUIRED COMPONENTS
-  jaguar4x4wheel_base
-  jaguar4x4wheel_control
-  jaguar4x4wheel_description
+  roslaunch
 )
 
 #Add all files in subdirectories of the project in
