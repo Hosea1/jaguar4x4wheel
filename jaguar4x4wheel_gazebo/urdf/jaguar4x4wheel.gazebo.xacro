@@ -35,6 +35,7 @@
         <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
         <velocityDrift>0 0 0</velocityDrift>
         <velocityGaussianNoise>0.01 0.01 0.01</velocityGaussianNoise>
+        <status>2</status>
       </plugin>
     </gazebo>
 
