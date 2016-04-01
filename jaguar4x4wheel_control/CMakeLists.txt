@@ -3,16 +3,9 @@ project(jaguar4x4wheel_control)
 
 find_package(catkin REQUIRED COMPONENTS roslaunch)
 
-#Add all files in subdirectories of the project in
-# a dummy_target so qtcreator have access to all files
-FILE(GLOB children ${CMAKE_SOURCE_DIR}/*)
-FOREACH(child ${children})
-  IF(IS_DIRECTORY ${child})
-    file(GLOB_RECURSE dir_files "${child}/*")
-    LIST(APPEND extra_files ${dir_files})
-  ENDIF()
-ENDFOREACH()
-add_custom_target(dummy_${PROJECT_NAME} SOURCES ${extra_files})
+#Add custom (non compiling) targets so launch scripts and python files show up in QT Creator's project view.
+file(GLOB_RECURSE EXTRA_FILES */*)
+add_custom_target(${PROJECT_NAME}_OTHER_FILES ALL WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} SOURCES ${EXTRA_FILES})
 
 catkin_package()
 
