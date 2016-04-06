@@ -1,17 +1,16 @@
 <?xml version="1.0"?>
 <package>
   <name>jaguar4x4wheel_bringup</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>The jaguar4x4wheel_bringup package</description>
 
-  <maintainer email="vincentrou@gmail.com">V. Rousseau</maintainer>
+  <author email="vincentrou@gmail.com">Vincent Rousseau</author>
 
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <maintainer email="vincentrou@gmail.com">Vincent Rousseau</maintainer>
+
+  <license>BSD</license>
 
   <!-- <url type="website">http://wiki.ros.org/jaguar4x4wheel_bringup</url> -->
-
-  <author email="vincentrou@gmail.com">V. Rousseau</author>
 
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>

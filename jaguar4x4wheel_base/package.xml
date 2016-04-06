@@ -1,19 +1,18 @@
 <?xml version="1.0"?>
 <package>
   <name>jaguar4x4wheel_base</name>
-  <version>0.2.4</version>
-  <description>Clearpath Jaguar4x4Wheel robot driver</description>
+  <version>0.1.0</version>
+  <description>DrRobot Jaguar4x4Wheel robot driver</description>
 
-  <author email="mpurvis@clearpathrobotics.com">Mike Purvis</author>
-  <author email="pbovbel@clearpathrobotics.com">Paul Bovbel</author>
+  <author email="vincentrou@gmail.com">Vincent Rousseau</author>
 
-  <maintainer email="pbovbel@clearpathrobotics.com">Paul Bovbel</maintainer>
+  <maintainer email="vincentrou@gmail.com">Vincent Rousseau</maintainer>
 
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/jaguar4x4wheel_base</url>
-  <url type="bugtracker">https://github.com/jaguar4x4wheel/jaguar4x4wheel_robot/issues</url>
-  <url type="repository">https://github.com/husly/jaguar4x4wheel_robot</url>
+  <!--<url type="website">http://ros.org/wiki/jaguar4x4wheel_base</url>-->
+  <url type="bugtracker">https://github.com/vincentrou/jaguar4x4wheel_robot/issues</url>
+  <url type="repository">https://github.com/vincentrou/jaguar4x4wheel_robot</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>controller_manager</build_depend>
@@ -28,8 +27,8 @@
   <run_depend>diff_drive_controller</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>hardware_interface</run_depend>
-  <!--<run_depend>jaguar4x4wheel_control</run_depend>-->
-  <!--<run_depend>jaguar4x4wheel_description</run_depend>-->
+  <run_depend>jaguar4x4wheel_control</run_depend>
+  <run_depend>jaguar4x4wheel_description</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>topic_tools</run_depend>

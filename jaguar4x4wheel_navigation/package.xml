@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>jaguar4x4wheel_navigation</name>
-  <version>0.2.7</version>
+  <version>0.1.0</version>
   <description>Autonomous mapping and navigation demos for the Jaguar 4x4 wheel robot</description>
 
   <author email="vincentrou@gmail.com">Vincent Rousseau</author>
@@ -10,9 +10,9 @@
 
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/jaguar4x4wheel_navigation</url>
-  <url type="bugtracker">https://github.com/jaguar4x4wheel/jaguar4x4wheel/issues</url>
-  <url type="repository">https://github.com/husly/jaguar4x4wheel</url>
+  <!--<url type="website">http://ros.org/wiki/jaguar4x4wheel_navigation</url>-->
+  <url type="bugtracker">https://github.com/vincentrou/jaguar4x4wheel/issues</url>
+  <url type="repository">https://github.com/vincentrou/jaguar4x4wheel</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roslaunch</build_depend>
