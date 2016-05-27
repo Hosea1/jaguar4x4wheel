@@ -28,6 +28,8 @@
   <run_depend>diff_drive_controller</run_depend>
   <run_depend>laser_proc</run_depend>
   <run_depend>urg_c</run_depend>
+  <run_depend>sick_tim</run_depend>
+  <run_depend>axis_camera</run_depend>
   <run_depend>nmea_comms</run_depend>
   <run_depend>nmea_navsat_driver</run_depend>
   <run_depend>robot_localization</run_depend>
