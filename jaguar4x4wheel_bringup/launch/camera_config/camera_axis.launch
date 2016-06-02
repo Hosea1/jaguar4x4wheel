@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find axis_camera)/launch/axis.launch">
+    <arg name="hostname" value="172.16.51.53:8081" />
+  </include>
+</launch>
