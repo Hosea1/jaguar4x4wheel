@@ -80,37 +80,37 @@
 
   <!-- Wheel macros -->
   <xacro:jaguar_wheel wheel_prefix="front_left">
-    <origin xyz="${wheelbase/2+wheel_x_offset} ${track/2} -${base_z_size/2 - wheel_radius + ground_clearance}" rpy="0 0 0" />
+    <origin xyz="${wheelbase/2+wheel_x_offset} ${track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
   </xacro:jaguar_wheel>
   <xacro:jaguar_wheel wheel_prefix="front_right">
-    <origin xyz="${wheelbase/2+wheel_x_offset} ${-track/2} -${base_z_size/2 - wheel_radius + ground_clearance}" rpy="0 0 0" />
+    <origin xyz="${wheelbase/2+wheel_x_offset} ${-track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
   </xacro:jaguar_wheel>
   <xacro:jaguar_wheel wheel_prefix="rear_left">
-    <origin xyz="${-wheelbase/2+wheel_x_offset} ${track/2} -${base_z_size/2 - wheel_radius + ground_clearance}" rpy="0 0 0" />
+    <origin xyz="${-wheelbase/2+wheel_x_offset} ${track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
   </xacro:jaguar_wheel>
   <xacro:jaguar_wheel wheel_prefix="rear_right">
-    <origin xyz="${-wheelbase/2+wheel_x_offset} ${-track/2} -${base_z_size/2 - wheel_radius + ground_clearance}" rpy="0 0 0" />
+    <origin xyz="${-wheelbase/2+wheel_x_offset} ${-track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
   </xacro:jaguar_wheel>
 
   <xacro:if value="$(arg laser_enabled)">
     <!-- Hokuyo UTM-30LX mounted upside down below the body -->
-    <xacro:include filename="$(find urg_description)/urdf/hokuyo_utm30lx.urdf.xacro" />
+    <!--<xacro:include filename="$(find urg_description)/urdf/hokuyo_utm30lx.urdf.xacro" />
     <xacro:hokuyo_utm30lx name="laser0" parent="base_link" ros_topic="scan" update_rate="40" ray_count="1081" min_angle="-135" max_angle="135">
       <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0"/>
-    </xacro:hokuyo_utm30lx>
+    </xacro:hokuyo_utm30lx>-->
 
 <!--    <xacro:include filename="$(find urg_description)/urdf/hokuyo_urg_04lx_ug01_laser.urdf.xacro" />
     <xacro:hokuyo_urg_04lx_ug01_laser name="laser0" parent="base_link" ros_topic="scan" update_rate="40" min_angle="-135" max_angle="135">
       <origin xyz="0.35 0.0 0.0" rpy="${M_PI} 0 0"/>
     </xacro:hokuyo_urg_04lx_ug01_laser>-->
 
-<!--       <xacro:include filename="$(find sick_tim)/urdf/sick_tim.urdf.xacro" />
-       <xacro:sick_tim551 name="laser0" ros_topic="scan" />
-        <joint name="laser0_mount_joint" type="fixed">
-            <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0" />
-            <parent link="base_link" />
-            <child link="laser0_mount_link" />
-        </joint>-->
+    <xacro:include filename="$(find sick_tim)/urdf/sick_tim.urdf.xacro" />
+    <xacro:sick_tim551 name="laser0" ros_topic="scan" />
+    <joint name="laser0_mount_joint" type="fixed">
+      <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0" />
+      <parent link="base_link" />
+      <child link="laser0_mount_link" />
+    </joint>
   </xacro:if>
 
   <xacro:if value="$(arg camera_enabled)">
