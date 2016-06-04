@@ -32,7 +32,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
     <gazebo>
       <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
-        <robotNamespace>/</robotNamespace>
         <updateRate>100.0</updateRate>
         <bodyName>base_link</bodyName>
         <topicName>imu/data</topicName>
@@ -48,7 +47,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <gazebo>
       <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
         <updateRate>10</updateRate>
-        <robotNamespace>/</robotNamespace>
         <bodyName>base_link</bodyName>
         <frameId>base_link</frameId>
         <topicName>navsat/fix</topicName>
