@@ -27,8 +27,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <xacro:arg name="laser_enabled" default="false" />
   <xacro:arg name="camera_enabled" default="false" />
+  <xacro:arg name="navsat_enabled" default="false" />
 
-  <xacro:include filename="$(find jaguar4x4wheel_description)/urdf/description.xacro" />
+  <xacro:include filename="$(find jaguar4x4wheel_description)/urdf/jaguar4x4wheel.urdf.xacro" />
   <xacro:include filename="$(find jaguar4x4wheel_gazebo)/urdf/jaguar4x4wheel.gazebo.xacro" />
 
   <!-- Gazebo plugin for ROS Control -->
@@ -36,7 +37,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
   </gazebo>
 
-  <xacro:jaguar4x4wheel_robot />
+  <xacro:jaguar4x4wheel />
 
   <xacro:jaguar4x4wheel_robot_gazebo />
 
