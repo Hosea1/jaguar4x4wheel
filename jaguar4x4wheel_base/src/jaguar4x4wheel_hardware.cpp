@@ -38,7 +38,7 @@ namespace {
   const float TICKS_PER_METER = 345; //345 based upon the diameter of the wheel including the track, 452 based upon the diamater of the wheel excluding the track. 345 works best inside the lab, 452 works best on the carpet outside
   const uint ENCODER_MIN = 0;
   const uint ENCODER_MAX = 32767;
-  const uint PULSES_PER_REVOLUTION = 186;//190; // for speed encoder
+  const uint PULSES_PER_REVOLUTION = 185;//190; // for speed encoder
 }
 
 namespace jaguar4x4wheel_base {
@@ -176,12 +176,12 @@ namespace jaguar4x4wheel_base {
 
     control_toolbox::Pid::Gains new_gains_left = init_gains_;
     control_toolbox::Pid::Gains new_gains_right = init_gains_;
-    if(fabs(joints_[0].velocity_command) < 0.5)
+    if(fabs(joints_[0].velocity_command) < 0.1)
     {
       new_gains_left.i_gain_ = 0;
       pid_controller_left_.reset();
     }
-    if(fabs(joints_[1].velocity_command) < 0.5)
+    if(fabs(joints_[1].velocity_command) < 0.1)
     {
       new_gains_right.i_gain_ = 0;
       pid_controller_right_.reset();
@@ -233,11 +233,11 @@ namespace jaguar4x4wheel_base {
   void Jaguar4x4WheelHardware::limitDifferentialSpeed(double &diff_speed_left, double &diff_speed_right)
   {
     double large_speed = std::max(std::abs(diff_speed_left), std::abs(diff_speed_right));
-
-    if (large_speed > max_speed_)
+    float max_speed = 3.0;
+    if (large_speed > max_speed)
     {
-      diff_speed_left *= max_speed_ / large_speed;
-      diff_speed_right *= max_speed_ / large_speed;
+      diff_speed_left *= max_speed / large_speed;
+      diff_speed_right *= max_speed / large_speed;
     }
   }
 
