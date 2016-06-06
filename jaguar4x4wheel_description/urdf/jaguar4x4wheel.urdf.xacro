@@ -1,133 +1,129 @@
 <?xml version="1.0"?>
 
-<robot name="jaguar4x4wheel" xmlns:xacro="http://www.ros.org/wiki/xacro">
-
+<robot name="jaguar4x4wheel" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="$(find jaguar4x4wheel_description)/urdf/wheel.urdf.xacro" />
 
-  <property name="M_PI" value="3.14159"/>
+  <xacro:property name="M_PI" value="3.14159"/>
 
   <!-- Base Size -->
-  <property name="base_x_size" value="0.49500" />
-  <property name="base_y_size" value="0.37000" />
-  <property name="base_z_size" value="0.16000" />
+  <xacro:property name="base_x_size" value="0.49500" />
+  <xacro:property name="base_y_size" value="0.37000" />
+  <xacro:property name="base_z_size" value="0.16000" />
 
   <!-- Wheel Mounting Positions -->
-  <property name="wheelbase" value="0.35" />
-  <property name="track" value="0.475" />
-  <property name="ground_clearance" value="0.09" />
-  <property name="wheel_x_offset" value="-0.02" />
+  <xacro:property name="wheelbase" value="0.35" />
+  <xacro:property name="track" value="0.475" />
+  <xacro:property name="ground_clearance" value="0.09" />
+  <xacro:property name="wheel_x_offset" value="-0.02" />
 
   <!-- Wheel Properties -->
-  <property name="wheel_length" value="0.09" />
-  <property name="wheel_radius" value="0.1275" />
+  <xacro:property name="wheel_length" value="0.09" />
+  <xacro:property name="wheel_radius" value="0.1275" />
 
   <!-- LIDAR Properties -->
-  <property name="lidar_ground_clearance" value="0.38" />
-<!--   <property name="lidar_ground_clearance" value="0.33" /> -->
-  <property name="lidar_x_offset" value="0.16" />
+  <xacro:property name="lidar_ground_clearance" value="0.38" />
+  <xacro:property name="lidar_x_offset" value="0.16" />
 
-  <!-- Base footprint is on the ground under the robot -->
-  <link name="base_footprint"/>
+  <xacro:macro name="jaguar4x4wheel">
 
-  <gazebo reference="base_link">
-    <material>Gazebo/Grey</material>
-  </gazebo>
-  <!-- Base link is the center of the robot's bottom plate -->
-  <link name="base_link">
-    <visual>
-      <geometry>
-        <box size="${base_x_size} ${base_y_size} ${base_z_size}"/>
-      </geometry>
-      <material name="grey">
-        <color rgba="0.6 0.6 0.6 1"/>
-      </material>
-    </visual>
-    <collision>
-      <geometry>
-        <box size="${base_x_size} ${base_y_size} ${base_z_size}"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="base_footprint_joint" type="fixed">
-    <origin xyz="0 0 ${ground_clearance + base_z_size/2}" rpy="0 0 0" />
-    <child link="base_link" />
-    <parent link="base_footprint" />
-  </joint>
+    <!-- Base footprint is on the ground under the robot -->
+    <link name="base_footprint"/>
 
-  <!-- Interial link stores the robot's inertial information -->
-  <link name="inertial_link">
-    <inertial>
-      <mass value="33.455" />
-      <origin xyz="-0.08748 -0.00085 0.09947" />
-      <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296" />
-    </inertial>
-  </link>
-
-  <joint name="inertial_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="inertial_link" />
-  </joint>
-
-  <!-- IMU Link is the standard mounting position for the IMU.-->
-  <link name="imu_link"/>
-  <joint name="imu_joint" type="fixed">
-    <origin xyz="0.35 0 0.1" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="imu_link" />
-  </joint>
-
-  <!-- Wheel macros -->
-  <xacro:jaguar_wheel wheel_prefix="front_left">
-    <origin xyz="${wheelbase/2+wheel_x_offset} ${track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
-  </xacro:jaguar_wheel>
-  <xacro:jaguar_wheel wheel_prefix="front_right">
-    <origin xyz="${wheelbase/2+wheel_x_offset} ${-track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
-  </xacro:jaguar_wheel>
-  <xacro:jaguar_wheel wheel_prefix="rear_left">
-    <origin xyz="${-wheelbase/2+wheel_x_offset} ${track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
-  </xacro:jaguar_wheel>
-  <xacro:jaguar_wheel wheel_prefix="rear_right">
-    <origin xyz="${-wheelbase/2+wheel_x_offset} ${-track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
-  </xacro:jaguar_wheel>
-
-  <xacro:if value="$(arg laser_enabled)">
-    <!-- Hokuyo UTM-30LX mounted upside down below the body -->
-    <!--<xacro:include filename="$(find urg_description)/urdf/hokuyo_utm30lx.urdf.xacro" />
-    <xacro:hokuyo_utm30lx name="laser0" parent="base_link" ros_topic="scan" update_rate="40" ray_count="1081" min_angle="-135" max_angle="135">
-      <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0"/>
-    </xacro:hokuyo_utm30lx>-->
-
-<!--    <xacro:include filename="$(find urg_description)/urdf/hokuyo_urg_04lx_ug01_laser.urdf.xacro" />
-    <xacro:hokuyo_urg_04lx_ug01_laser name="laser0" parent="base_link" ros_topic="scan" update_rate="40" min_angle="-135" max_angle="135">
-      <origin xyz="0.35 0.0 0.0" rpy="${M_PI} 0 0"/>
-    </xacro:hokuyo_urg_04lx_ug01_laser>-->
-
-    <xacro:include filename="$(find sick_tim)/urdf/sick_tim.urdf.xacro" />
-    <xacro:sick_tim551 name="laser0" ros_topic="scan" />
-    <joint name="laser0_mount_joint" type="fixed">
-      <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0" />
-      <parent link="base_link" />
-      <child link="laser0_mount_link" />
+    <gazebo reference="base_link">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+    <!-- Base link is the center of the robot's bottom plate -->
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <box size="${base_x_size} ${base_y_size} ${base_z_size}"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.6 0.6 0.6 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${base_x_size} ${base_y_size} ${base_z_size}"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="base_footprint_joint" type="fixed">
+      <origin xyz="0 0 ${ground_clearance + base_z_size/2}" rpy="0 0 0" />
+      <child link="base_link" />
+      <parent link="base_footprint" />
     </joint>
-  </xacro:if>
 
-  <xacro:if value="$(arg camera_enabled)">
-    <link name="camera_link"/>
-    <joint name="camera_joint" type="fixed">
-      <origin xyz="0.35 0 0.41" rpy="0 0 0" />
-      <parent link="base_link" />
-      <child link="camera_link" />
-    </joint>
-  </xacro:if>
+    <!-- Interial link stores the robot's inertial information -->
+    <link name="inertial_link">
+      <inertial>
+        <mass value="33.455" />
+        <origin xyz="-0.08748 -0.00085 0.09947" />
+        <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296" />
+      </inertial>
+    </link>
 
-  <xacro:if value="$(arg navsat_enabled)">
-    <link name="navsat_link"/>
-    <joint name="navsat_joint" type="fixed">
-      <origin xyz="0.3 0 0.3" rpy="0 0 0" />
+    <joint name="inertial_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="base_link" />
-      <child link="navsat_link" />
+      <child link="inertial_link" />
     </joint>
-  </xacro:if>
+
+    <!-- IMU Link is the standard mounting position for the IMU.-->
+    <link name="imu_link"/>
+    <joint name="imu_joint" type="fixed">
+      <origin xyz="0.35 0 0.1" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="imu_link" />
+    </joint>
+
+    <!-- Wheel macros -->
+    <xacro:jaguar_wheel wheel_prefix="front_left">
+      <origin xyz="${wheelbase/2+wheel_x_offset} ${track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
+    </xacro:jaguar_wheel>
+    <xacro:jaguar_wheel wheel_prefix="front_right">
+      <origin xyz="${wheelbase/2+wheel_x_offset} ${-track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
+    </xacro:jaguar_wheel>
+    <xacro:jaguar_wheel wheel_prefix="rear_left">
+      <origin xyz="${-wheelbase/2+wheel_x_offset} ${track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
+    </xacro:jaguar_wheel>
+    <xacro:jaguar_wheel wheel_prefix="rear_right">
+      <origin xyz="${-wheelbase/2+wheel_x_offset} ${-track/2} ${-base_z_size/2 + wheel_radius - ground_clearance}" rpy="0 0 0" />
+    </xacro:jaguar_wheel>
+
+    <xacro:if value="$(arg laser_enabled)">
+      <!-- Hokuyo UTM-30LX mounted upside down below the body -->
+      <!--<xacro:include filename="$(find urg_description)/urdf/hokuyo_utm30lx.urdf.xacro" />
+      <xacro:hokuyo_utm30lx name="laser0" parent="base_link" ros_topic="scan" update_rate="40" ray_count="1081" min_angle="-135" max_angle="135">
+        <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0"/>
+      </xacro:hokuyo_utm30lx>-->
+
+      <xacro:include filename="$(find sick_tim)/urdf/sick_tim.urdf.xacro" />
+      <xacro:sick_tim551 name="laser0" ros_topic="scan" />
+      <joint name="laser0_mount_joint" type="fixed">
+        <origin xyz="${lidar_x_offset} 0.0 ${lidar_ground_clearance - base_z_size/2 - wheel_radius}" rpy="${M_PI} 0 0" />
+        <parent link="base_link" />
+        <child link="laser0_mount_link" />
+      </joint>
+    </xacro:if>
+
+    <xacro:if value="$(arg camera_enabled)">
+      <link name="camera_link"/>
+      <joint name="camera_joint" type="fixed">
+        <origin xyz="0.35 0 0.41" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="camera_link" />
+      </joint>
+    </xacro:if>
+
+    <xacro:if value="$(arg navsat_enabled)">
+      <link name="navsat_link"/>
+      <joint name="navsat_joint" type="fixed">
+        <origin xyz="0.3 0 0.3" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="navsat_link" />
+      </joint>
+    </xacro:if>
+  </xacro:macro>
 </robot>
