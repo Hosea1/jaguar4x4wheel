@@ -21,7 +21,8 @@ git clone https://github.com/vincentrou/jaguar4x4wheel.git
 ### Download missing ros dependency
 
 ```bash
-rosdep install jaguar4x4wheel_bringup
+cd jaguar4x4wheel
+rosdep install --from-paths . -i -y
 ```
 
 ### Download other repos with wstool
