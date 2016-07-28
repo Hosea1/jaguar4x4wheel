@@ -36,3 +36,13 @@ wstool init . jaguar4x4wheel/.rosinstall
 ```bash
 catkin build
 ```
+
+## Launch robot in simulation
+`roslaunch jaguar4x4wheel_gazebo jaguar4x4wheel_empty_world.launch`
+
+`roslaunch jaguar4x4wheel_control control.launch`
+
+## Launch robot in real
+
+`roslaunch jaguar4x4wheel_base base.launch`
+
