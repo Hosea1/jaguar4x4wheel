@@ -16,4 +16,6 @@
   <node name="spawn_jaguar4x4wheel_model" pkg="gazebo_ros" type="spawn_model"
     args="$(arg robot_initial_pose) -unpause -urdf -z 0.5 -param robot_description -model mobile_base"/>
 
+  <include file="$(find jaguar4x4wheel_control)/launch/control.launch"/>
+
 </launch>
