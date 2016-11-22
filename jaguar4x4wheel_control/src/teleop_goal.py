@@ -11,9 +11,9 @@ class TeleopGoal():
         # name for our 'listener' node so that multiple listeners can
         # run simultaneously.
 
-        rospy.Subscriber("/joy_teleop/joy", Joy, self.callback)
-        self.pub = rospy.Publisher('/move_base_simple/goal', PoseStamped, queue_size=10)
-        self.pub_view = rospy.Publisher('/move_base_simple/goal_view', PoseStamped, queue_size=10)
+        rospy.Subscriber("joy_teleop/joy", Joy, self.callback)
+        self.pub = rospy.Publisher('move_base_simple/goal', PoseStamped, queue_size=10)
+        self.pub_view = rospy.Publisher('move_base_simple/goal_view', PoseStamped, queue_size=10)
 
         # spin() simply keeps python from exiting until this node is stopped
         rospy.spin()
