@@ -20,17 +20,18 @@ class TeleopGoal():
 
     def callback(self, data):
         #rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.buttons)
-        right_left = data.axes[0]
-        front_back = data.axes[1]
-        pose_msg = PoseStamped()
-        pose_msg.header.frame_id = "/base_footprint"
-        pose_msg.header.stamp = rospy.Time.now()
-        pose_msg.pose.position.x = front_back *3;
-        pose_msg.pose.position.y = right_left *3;
-        pose_msg.pose.orientation.w = 1.0;
-        self.pub_view.publish(pose_msg)
-        if data.buttons[1]:
-            self.pub.publish(pose_msg)
+        if data.buttons:
+            right_left = data.axes[0]
+            front_back = data.axes[1]
+            pose_msg = PoseStamped()
+            pose_msg.header.frame_id = "/base_footprint"
+            pose_msg.header.stamp = rospy.Time.now()
+            pose_msg.pose.position.x = front_back *3;
+            pose_msg.pose.position.y = right_left *3;
+            pose_msg.pose.orientation.w = 1.0;
+            self.pub_view.publish(pose_msg)
+            if data.buttons[1]:
+                self.pub.publish(pose_msg)
 
 
 if __name__ == '__main__':
